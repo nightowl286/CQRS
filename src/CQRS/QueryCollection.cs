@@ -1,4 +1,5 @@
 ﻿using TNO.CQRS.Abstractions.Query;
+using TNO.DependencyInjection.Abstractions;
 using TNO.DependencyInjection.Abstractions.Components;
 using TNO.Dispatch;
 
@@ -6,11 +7,11 @@ namespace TNO.CQRS
 {
    public class QueryCollection : DispatchCollection<IQueryRequest, IQueryCollection>, IQueryCollection
    {
-      public QueryCollection(IServiceBuilder builder, ReplaceMode mode = ReplaceMode.Throw) : base(builder, mode) { }
-      protected QueryCollection(SimpleCollection collection, ReplaceMode mode, DispatchCollection<IQueryRequest, IQueryCollection> outerScope) : base(collection, mode, outerScope) { }
+      public QueryCollection(IServiceScope scope) : base(scope) { }
+      protected QueryCollection(IServiceFacade scope, DispatchCollection<IQueryRequest, IQueryCollection> outerScope) : base(scope, outerScope) { }
 
       #region Methods
-      public override IQueryCollection CreateScope() => new QueryCollection(_collection.CreateScope(), _mode, this);
+      public override IQueryCollection CreateScope() => new QueryCollection(_serviceFacade.CreateScope(), this);
       #endregion
    }
 }
