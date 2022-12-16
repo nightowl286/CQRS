@@ -1,6 +1,5 @@
 ﻿using TNO.CQRS.Abstractions.Query;
 using TNO.DependencyInjection.Abstractions.Components;
-using TNO.DependencyInjection.Components;
 using TNO.Dispatch;
 
 namespace TNO.CQRS

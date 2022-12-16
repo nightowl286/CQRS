@@ -16,7 +16,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="TNO.Dispatch.Abstractions" Version="1.0.0" />
+    <PackageReference Include="TNO.Dispatch.Abstractions" Version="1.1.0" />
     <PackageReference Include="TNO.Void" Version="1.0.0" />
   </ItemGroup>
 

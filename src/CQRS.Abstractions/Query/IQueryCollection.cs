@@ -1,4 +1,4 @@
-﻿using TNO.Dispatch.Abstractions;
+﻿using TNO.Dispatch.Abstractions.Workflows;
 
 namespace TNO.CQRS.Abstractions.Query
 {
