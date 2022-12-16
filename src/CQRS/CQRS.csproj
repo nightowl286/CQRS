@@ -12,6 +12,10 @@
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <Version>1.0.1</Version>
+    <Title>CQRS</Title>
+    <Description>A package that provides CQRS functionality using the dispatch system.</Description>
+    <PackageTags>cqrs, dispatch</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

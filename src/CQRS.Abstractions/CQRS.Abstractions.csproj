@@ -13,6 +13,10 @@
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Version>1.0.1</Version>
+    <Title>CQRS - Abstraction</Title>
+    <Description>A package that provides the abstractions for the CQRS system.</Description>
+    <PackageTags>cqrs, dispatch, abstractions</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
