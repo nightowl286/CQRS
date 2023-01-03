@@ -22,7 +22,8 @@ public static class QueryExtensions
    /// <param name="registrar">
    /// The registrar that <typeparamref name="THandler"/> should be registered with.
    /// </param>
-   public static void Register<TOutput, TQuery, THandler>(this IQueryRegistrar registrar)
+   /// <returns>The current <see cref="IQueryRegistrar"/>, following the builder pattern.</returns>
+   public static IQueryRegistrar Register<TOutput, TQuery, THandler>(this IQueryRegistrar registrar)
       where TOutput : notnull
       where TQuery : notnull, IQueryRequest
       where THandler : IQueryHandler<TOutput, TQuery>
@@ -32,6 +33,8 @@ public static class QueryExtensions
       Type handlerType = typeof(THandler);
 
       registrar.Register(outputType, queryType, handlerType);
+
+      return registrar;
    }
 
    /// <inheritdoc cref="Register{TOutput, TQuery, THandler}(IQueryRegistrar)"/>
@@ -41,7 +44,8 @@ public static class QueryExtensions
    /// <param name="workflow">
    /// The workflow to use when registering the <typeparamref name="THandler"/>.
    /// </param>
-   public static void Register<TOutput, TQuery, THandler>(this IQueryRegistrar registrar, IDispatchWorkflow workflow)
+   /// <returns>The current <see cref="IQueryRegistrar"/>, following the builder pattern.</returns>
+   public static IQueryRegistrar Register<TOutput, TQuery, THandler>(this IQueryRegistrar registrar, IDispatchWorkflow workflow)
       where TOutput : notnull
       where TQuery : notnull, IQueryRequest
       where THandler : IQueryHandler<TOutput, TQuery>
@@ -51,6 +55,8 @@ public static class QueryExtensions
       Type handlerType = typeof(THandler);
 
       registrar.Register(outputType, queryType, handlerType, workflow);
+
+      return registrar;
    }
    #endregion
 }

@@ -2,8 +2,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 using TNO.CQRS.Abstractions.Query;
-using TNO.Dispatch.Abstractions.Results;
 using TNO.Dispatch.Abstractions.Workflows;
+using TNO.Dispatch.Results;
 
 namespace TNO.CQRS.Abstractions.Commands;
 
@@ -26,7 +26,7 @@ public static class CommandExtensions
    /// <param name="registrar">
    /// The registrar that <typeparamref name="THandler"/> should be registered with.
    /// </param>
-   public static void Register<TOutput, TCommand, THandler>(this ICommandRegistrar registrar)
+   public static ICommandRegistrar Register<TOutput, TCommand, THandler>(this ICommandRegistrar registrar)
       where TOutput : notnull
       where TCommand : notnull, ICommandRequest
       where THandler : ICommandHandler<TOutput, TCommand>
@@ -36,6 +36,8 @@ public static class CommandExtensions
       Type handlerType = typeof(THandler);
 
       registrar.Register(outputType, commandType, handlerType);
+
+      return registrar;
    }
 
    /// <inheritdoc cref="Register{TOutput, TCommand, THandler}(ICommandRegistrar)"/>
@@ -45,7 +47,7 @@ public static class CommandExtensions
    /// <param name="workflow">
    /// The workflow to use when registering the <typeparamref name="THandler"/>.
    /// </param>
-   public static void Register<TOutput, TQuery, THandler>(this IQueryRegistrar registrar, IDispatchWorkflow workflow)
+   public static ICommandRegistrar Register<TOutput, TQuery, THandler>(this ICommandRegistrar registrar, IDispatchWorkflow workflow)
      where TOutput : notnull
      where TQuery : notnull, IQueryRequest
      where THandler : IQueryHandler<TOutput, TQuery>
@@ -55,6 +57,8 @@ public static class CommandExtensions
       Type handlerType = typeof(THandler);
 
       registrar.Register(outputType, queryType, handlerType, workflow);
+
+      return registrar;
    }
 
    /// <summary>
@@ -69,7 +73,12 @@ public static class CommandExtensions
    /// The type of the <see cref="ICommandHandler{TCommand}"/> to register with the given
    /// <see cref="Void"/>/<paramref name="requestType"/> combination.
    /// </param>
-   public static void Register(this ICommandRegistrar registrar, Type requestType, Type handlerType) => registrar.Register(typeof(Void), requestType, handlerType);
+   public static ICommandRegistrar Register(this ICommandRegistrar registrar, Type requestType, Type handlerType)
+   {
+      registrar.Register(typeof(Void), requestType, handlerType);
+
+      return registrar;
+   }
 
    /// <summary>
    /// Registers the given <typeparamref name="THandler"/> with the given 
@@ -83,7 +92,7 @@ public static class CommandExtensions
    /// <param name="registrar">
    /// The registrar that the <typeparamref name="THandler"/> should be registered with.
    /// </param>
-   public static void Register<TCommand, THandler>(this ICommandRegistrar registrar)
+   public static ICommandRegistrar Register<TCommand, THandler>(this ICommandRegistrar registrar)
       where TCommand : notnull, ICommandRequest
       where THandler : ICommandHandler<Void, TCommand>
    {
@@ -92,6 +101,8 @@ public static class CommandExtensions
       Type handlerType = typeof(THandler);
 
       registrar.Register(outputType, commandType, handlerType);
+
+      return registrar;
    }
 
 
@@ -110,7 +121,7 @@ public static class CommandExtensions
    /// <param name="workflow">
    /// The workflow to use when registering the <typeparamref name="THandler"/>.
    /// </param>
-   public static void Register<TCommand, THandler>(this ICommandRegistrar registrar, IDispatchWorkflow workflow)
+   public static ICommandRegistrar Register<TCommand, THandler>(this ICommandRegistrar registrar, IDispatchWorkflow workflow)
       where TCommand : notnull, ICommandRequest
       where THandler : ICommandHandler<Void, TCommand>
    {
@@ -119,6 +130,8 @@ public static class CommandExtensions
       Type handlerType = typeof(THandler);
 
       registrar.Register(outputType, commandType, handlerType, workflow);
+
+      return registrar;
    }
    #endregion
 
@@ -142,7 +155,7 @@ public static class CommandExtensions
    /// A <see cref="CancellationToken"/> that can be used to cancel this operation.
    /// </param>
    /// <returns>The dispatch result returned by the handler.</returns>
-   public static ValueTask<IDispatchResult<Void>> DispatchAsync<TRequest>(this ICommandDispatcher dispatcher, TRequest request, CancellationToken cancellationToken = default)
+   public static ValueTask<DispatchResult<Void>> DispatchAsync<TRequest>(this ICommandDispatcher dispatcher, TRequest request, CancellationToken cancellationToken = default)
       where TRequest : ICommandRequest
       => dispatcher.DispatchAsync<Void, TRequest>(request, cancellationToken);
    #endregion

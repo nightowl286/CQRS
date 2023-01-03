@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using TNO.Dispatch.Abstractions;
-using TNO.Dispatch.Abstractions.Results;
 using TNO.Dispatch.Abstractions.Workflows;
+using TNO.Dispatch.Results;
 
 namespace TNO.CQRS.Abstractions.Commands;
 
@@ -50,13 +50,12 @@ public interface ICommandHandler<in TCommand> : ICommandHandler<Void, TCommand>
    /// A <see cref="CancellationToken"/> that can be used to cancel this operation.
    /// </param>
    /// <returns>The result of handling the given <paramref name="command"/>.</returns>
-   new ValueTask<IDispatchResult> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
+   new ValueTask<DispatchResult<Void>> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
    #endregion
 
-   async ValueTask<IDispatchResult<Void>> IRequestHandler<Void, TCommand>.HandleAsync(TCommand request, CancellationToken cancellationToken)
+   async ValueTask<DispatchResult<Void>> IRequestHandler<Void, TCommand>.HandleAsync(TCommand request, CancellationToken cancellationToken)
    {
-      IDispatchResult result = await HandleAsync(request, cancellationToken);
-
-      return (IDispatchResult<Void>)result;
+      DispatchResult<Void> result = await HandleAsync(request, cancellationToken);
+      return result;
    }
 }
