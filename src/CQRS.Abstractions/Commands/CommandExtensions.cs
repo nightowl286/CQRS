@@ -26,6 +26,7 @@ public static class CommandExtensions
    /// <param name="registrar">
    /// The registrar that <typeparamref name="THandler"/> should be registered with.
    /// </param>
+   /// <returns>The given <paramref name="registrar"/>, following the builder pattern.</returns>
    public static ICommandRegistrar Register<TOutput, TCommand, THandler>(this ICommandRegistrar registrar)
       where TOutput : notnull
       where TCommand : notnull, ICommandRequest
@@ -40,6 +41,33 @@ public static class CommandExtensions
       return registrar;
    }
 
+   /// <summary>
+   /// 
+   /// </summary>
+   /// <typeparam name="TOutput">The type of the output that the handler will return.</typeparam>
+   /// <typeparam name="TCommand">The type of the command that the handler can handle.</typeparam>
+   /// <typeparam name="THandler">
+   /// The type of the <paramref name="handler"/> to register with the 
+   /// given <typeparamref name="TOutput"/>/<typeparamref name="TCommand"/> combination.
+   /// </typeparam>
+   /// <param name="registrar">
+   /// The registrar that <typeparamref name="THandler"/> should be registered with.
+   /// </param>
+   /// <param name="handler">The handler to register.</param>
+   /// <returns>The given <paramref name="registrar"/>, following the builder pattern.</returns>
+   public static ICommandRegistrar Register<TOutput, TCommand, THandler>(this ICommandRegistrar registrar, THandler handler)
+      where TOutput : notnull
+      where TCommand : notnull, ICommandRequest
+      where THandler : ICommandHandler<TOutput, TCommand>
+   {
+      Type outputType = typeof(TOutput);
+      Type commandType = typeof(TCommand);
+
+      registrar.Register(outputType, commandType, handler);
+
+      return registrar;
+   }
+
    /// <inheritdoc cref="Register{TOutput, TCommand, THandler}(ICommandRegistrar)"/>
    /// <param name="registrar">
    /// The registrar that <typeparamref name="THandler"/> should be registered with.
@@ -47,6 +75,7 @@ public static class CommandExtensions
    /// <param name="workflow">
    /// The workflow to use when registering the <typeparamref name="THandler"/>.
    /// </param>
+   /// <returns>The given <paramref name="registrar"/>, following the builder pattern.</returns>
    public static ICommandRegistrar Register<TOutput, TQuery, THandler>(this ICommandRegistrar registrar, IDispatchWorkflow workflow)
      where TOutput : notnull
      where TQuery : notnull, IQueryRequest
@@ -73,9 +102,27 @@ public static class CommandExtensions
    /// The type of the <see cref="ICommandHandler{TCommand}"/> to register with the given
    /// <see cref="Void"/>/<paramref name="requestType"/> combination.
    /// </param>
+   /// <returns>The given <paramref name="registrar"/>, following the builder pattern.</returns>
    public static ICommandRegistrar Register(this ICommandRegistrar registrar, Type requestType, Type handlerType)
    {
       registrar.Register(typeof(Void), requestType, handlerType);
+
+      return registrar;
+   }
+
+   /// <summary>
+   /// Register the given <paramref name="handler"/> with the given
+   /// <see cref="Void"/>/<paramref name="requestType"/> combination.
+   /// </summary>
+   /// <param name="registrar">
+   /// The registrar that the <paramref name="handler"/> should be registered with.
+   /// </param>
+   /// <param name="requestType">The type of the request that the <paramref name="handler"/> can handle.</param>
+   /// <param name="handler">The handler to register.</param>
+   /// <returns>The given <paramref name="registrar"/>, following the builder pattern.</returns>
+   public static ICommandRegistrar Register(this ICommandRegistrar registrar, Type requestType, object handler)
+   {
+      registrar.Register(typeof(Void), requestType, handler);
 
       return registrar;
    }
@@ -92,6 +139,7 @@ public static class CommandExtensions
    /// <param name="registrar">
    /// The registrar that the <typeparamref name="THandler"/> should be registered with.
    /// </param>
+   /// <returns>The given <paramref name="registrar"/>, following the builder pattern.</returns>
    public static ICommandRegistrar Register<TCommand, THandler>(this ICommandRegistrar registrar)
       where TCommand : notnull, ICommandRequest
       where THandler : ICommandHandler<Void, TCommand>
@@ -101,6 +149,32 @@ public static class CommandExtensions
       Type handlerType = typeof(THandler);
 
       registrar.Register(outputType, commandType, handlerType);
+
+      return registrar;
+   }
+
+   /// <summary>
+   /// Registers the given <paramref name="handler"/> with the given 
+   /// <see cref="Void"/>/<typeparamref name="TCommand"/> combination.
+   /// </summary>
+   /// <typeparam name="TCommand">The type of the command that the handler can handle.</typeparam>
+   /// <typeparam name="THandler">
+   /// The type of the <paramref name="handler"/> to register with the given
+   /// <see cref="Void"/>/<typeparamref name="TCommand"/> combination.
+   /// </typeparam>
+   /// <param name="registrar">
+   /// The registrar that the <paramref name="handler"/> should be registered with.
+   /// </param>
+   /// <param name="handler">The handler to register.</param>
+   /// <returns>The given <paramref name="registrar"/>, following the builder pattern.</returns>
+   public static ICommandRegistrar Register<TCommand, THandler>(this ICommandRegistrar registrar, THandler handler)
+      where TCommand : notnull, ICommandRequest
+      where THandler : ICommandHandler<Void, TCommand>
+   {
+      Type outputType = typeof(Void);
+      Type commandType = typeof(TCommand);
+
+      registrar.Register(outputType, commandType, handler);
 
       return registrar;
    }
@@ -121,6 +195,7 @@ public static class CommandExtensions
    /// <param name="workflow">
    /// The workflow to use when registering the <typeparamref name="THandler"/>.
    /// </param>
+   /// <returns>The given <paramref name="registrar"/>, following the builder pattern.</returns>
    public static ICommandRegistrar Register<TCommand, THandler>(this ICommandRegistrar registrar, IDispatchWorkflow workflow)
       where TCommand : notnull, ICommandRequest
       where THandler : ICommandHandler<Void, TCommand>
